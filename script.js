@@ -56,6 +56,10 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
  */
 const getIdFromProductItem = (product) => product.querySelector('span.id').innerText;
 
+const cartItemClickListener = (event) => {
+  const fatherElement = event.target.parentElement;
+  fatherElement.removeChild(event.target);
+};
 /**
  * Função responsável por criar e retornar um item do carrinho.
  * @param {Object} product - Objeto do produto.
@@ -81,6 +85,19 @@ const createElementsPage = async () => {
   });
 };
 
+const addInCart = async (event) => {
+  const itemSection = event.target.parentElement;
+  const clickedItemID = itemSection.children[0].innerText;
+  const infoComputer = await fetchItem(clickedItemID);
+  const infosAddComputerInCart = createCartItemElement(infoComputer);
+  const cart = document.querySelector('.cart__items');
+  cart.appendChild(infosAddComputerInCart);
+};
+
 window.onload = async () => { 
   await createElementsPage();
+  const fullSections = document.querySelectorAll('.item');
+  fullSections.forEach((item) => {
+    item.addEventListener('click', addInCart);
+  });
 };
