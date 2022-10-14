@@ -118,6 +118,15 @@ const getLocalStorage = () => {
   });
 };
 
+const clearCart = () => {
+  const itemsInCart = Object.values(cartSection.children);
+  itemsInCart.forEach((item) => {
+    cartSection.removeChild(item);
+  });
+};
+
+cartButton = document.querySelector('.empty-cart');
+cartButton.addEventListener('click', clearCart);
 window.onload = async () => { 
   getLocalStorage();
   await createElementsPage();
