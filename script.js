@@ -2,7 +2,7 @@
 // experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições! 
 
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
-
+const cartSection = document.querySelector('.cart__items');
 /**
  * Função responsável por criar e retornar o elemento de imagem do produto.
  * @param {string} imageSource - URL da imagem.
@@ -85,16 +85,41 @@ const createElementsPage = async () => {
   });
 };
 
+const saveLocalStorage = () => {
+  const sectionMain = document.querySelectorAll('.cart__item');
+  const arrObjects = [];
+  sectionMain.forEach((li) => {
+    const infosSection = li.innerText.split(' | ');
+    const infos = infosSection.map((section) => section.replace(/(ID: | TITLE: |PRICE: \$)/, ''));
+    arrObjects.push({
+      id: infos[0],
+      title: infos[1],
+      price: infos[2],
+    });
+  });
+  saveCartItems(JSON.stringify(arrObjects));
+};
+
 const addInCart = async (event) => {
   const itemSection = event.target.parentElement;
   const clickedItemID = itemSection.children[0].innerText;
   const infoComputer = await fetchItem(clickedItemID);
   const infosAddComputerInCart = createCartItemElement(infoComputer);
-  const cart = document.querySelector('.cart__items');
-  cart.appendChild(infosAddComputerInCart);
+  cartSection.appendChild(infosAddComputerInCart);
+  saveLocalStorage();
+};
+
+const getLocalStorage = () => {
+  if (!localStorage.getItem('cartItems')) return;  
+  const arrObjects = getSavedCartItems();
+    arrObjects.forEach((infos) => {
+    const infoComputers = createCartItemElement(infos);
+    cartSection.appendChild(infoComputers);
+  });
 };
 
 window.onload = async () => { 
+  getLocalStorage();
   await createElementsPage();
   const fullSections = document.querySelectorAll('.item');
   fullSections.forEach((item) => {
