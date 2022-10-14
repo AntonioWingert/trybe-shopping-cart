@@ -54,11 +54,31 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
  * @param {Element} product - Elemento do produto.
  * @returns {string} ID do produto.
  */
-// const getIdFromProductItem = (product) => product.querySelector('span.id').innerText;
+const sumItems = async () => {
+  const itemsOnCart = Object.values(cartSection.children);
+  const totalPrice = itemsOnCart.reduce((acc, item) => {
+    const price = item.innerText.match(/(?<=PRICE: \$)[0-9.]+/);
+    return acc + Number(price);
+  }, 0);
+
+  let totalPriceValue;
+
+  if (document.querySelector('.total-price')) {
+    totalPriceValue = document.querySelector('.total-price');
+    totalPriceValue.innerHTML = `Total: $${totalPrice}`;
+  } else {
+    totalPriceValue = document.createElement('h4');
+    totalPriceValue.innerHTML = `Total: $${totalPrice}`;
+    totalPriceValue.className = 'total-price';
+    const cartTitle = document.querySelector('.container-cartTitle');
+    cartTitle.appendChild(totalPriceValue);
+  }
+};
 
 const cartItemClickListener = (event) => {
   const fatherElement = event.target.parentElement;
   fatherElement.removeChild(event.target);
+  sumItems();
 };
 /**
  * Função responsável por criar e retornar um item do carrinho.
@@ -100,6 +120,7 @@ const createElementsPage = async () => {
     mainSection.appendChild(section);
   });
   removeLoading();
+  sumItems();
 };
 
 const saveLocalStorage = () => {
@@ -124,6 +145,7 @@ const addInCart = async (event) => {
   const infosAddComputerInCart = createCartItemElement(infoComputer);
   cartSection.appendChild(infosAddComputerInCart);
   saveLocalStorage();
+  sumItems();
 };
 
 const getLocalStorage = () => {
@@ -140,6 +162,7 @@ const clearCart = () => {
   itemsInCart.forEach((item) => {
     cartSection.removeChild(item);
   });
+  sumItems();
 };
 
 cartButton = document.querySelector('.empty-cart');
