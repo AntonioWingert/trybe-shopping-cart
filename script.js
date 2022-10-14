@@ -76,13 +76,30 @@ const createCartItemElement = ({ id, title, price }) => {
   return li;
 };
 
+const header = document.querySelector('header');
+
+const loading = () => {
+  const loadingElement = document.createElement('h2');
+  loadingElement.innerText = 'carregando...';
+  loadingElement.className = 'loading';
+  loadingElement.style.color = 'white';
+  header.appendChild(loadingElement);
+};
+
+const removeLoading = () => {
+  const loadingElement = document.querySelector('.loading');
+  header.removeChild(loadingElement);
+};
+
 const createElementsPage = async () => {
+  loading();
   const allPcs = await fetchProducts('computador');
   const mainSection = document.querySelector('.items');
   allPcs.results.forEach((item) => {
     const section = createProductItemElement(item);
     mainSection.appendChild(section);
   });
+  removeLoading();
 };
 
 const saveLocalStorage = () => {
