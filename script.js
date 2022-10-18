@@ -128,7 +128,7 @@ const saveLocalStorage = () => {
   const arrObjects = [];
   sectionMain.forEach((li) => {
     const infosSection = li.innerText.split(' | ');
-    const infos = infosSection.map((section) => section.replace(/(ID: | TITLE: |PRICE: \$)/, ''));
+    const infos = infosSection.map((section) => section.replace(/(ID: |TITLE: |PRICE: \$)/, ''));
     arrObjects.push({
       id: infos[0],
       title: infos[1],
@@ -163,6 +163,7 @@ const clearCart = () => {
     cartSection.removeChild(item);
   });
   sumItems();
+  saveLocalStorage();
 };
 
 cartButton = document.querySelector('.empty-cart');
